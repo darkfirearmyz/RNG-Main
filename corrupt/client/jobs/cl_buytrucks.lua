@@ -1,0 +1,169 @@
+-- RMenu.Add(
+--     "corrupttruckmenu",
+--     "buy-rent",
+--     RageUI.CreateMenu("Corrupt Trucking", "~b~Corrupt Trucking", CORRUPT.getRageUIMenuWidth(), CORRUPT.getRageUIMenuHeight())
+-- )
+-- RMenu.Add(
+--     "corrupttruckmenu",
+--     "vehicle",
+--     RageUI.CreateSubMenu(
+--         RMenu:Get("corrupttruckmenu", "buy-rent"),
+--         "Corrupt Trucking",
+--         "~b~Corrupt Trucking",
+--         CORRUPT.getRageUIMenuWidth(),
+--         CORRUPT.getRageUIMenuHeight()
+--     )
+-- )
+-- RMenu.Add(
+--     "corrupttruckmenu",
+--     "vehicles",
+--     RageUI.CreateMenu("Your Trucks", "~b~Corrupt Trucking", CORRUPT.getRageUIMenuWidth(), CORRUPT.getRageUIMenuHeight())
+-- )
+-- RMenu.Add(
+--     "corrupttruckmenu",
+--     "rented_trucks",
+--     RageUI.CreateSubMenu(
+--         RMenu:Get("corrupttruckmenu", "vehicles"),
+--         "Rented Vehicles",
+--         "~b~Corrupt Trucking",
+--         CORRUPT.getRageUIMenuWidth(),
+--         CORRUPT.getRageUIMenuHeight()
+--     )
+-- )
+-- RMenu.Add(
+--     "corrupttruckmenu",
+--     "owned_trucks",
+--     RageUI.CreateSubMenu(
+--         RMenu:Get("corrupttruckmenu", "vehicles"),
+--         "Owned Vehicles",
+--         "~b~Corrupt Trucking",
+--         CORRUPT.getRageUIMenuWidth(),
+--         CORRUPT.getRageUIMenuHeight()
+--     )
+-- )
+-- local a = module("cfg/cfg_trucking")
+-- local b = a.trucks
+-- local c = {}
+-- local d = {}
+-- local e
+-- local f = ""
+-- local g
+-- local h
+-- local i = false
+-- local j = false
+-- local k = 10.0
+-- globalOnTruckJob = true
+-- RageUI.CreateWhile(
+--     1.0,
+--     RMenu:Get("corrupttruckmenu", "buy-rent"),
+--     nil,
+--     function()
+--         RageUI.IsVisible(
+--             RMenu:Get("corrupttruckmenu", "buy-rent"),
+--             true,
+--             false,
+--             true,
+--             function()
+--                 for l, m in pairs(b) do
+--                     if not m.custom then
+--                         local n
+--                         if table.has(d["rented"], GetHashKey(l)) then
+--                             n = {RightBadge = RageUI.BadgeStyle.Tick}
+--                         else
+--                             n = {RightLabel = "£" .. getMoneyStringFormatted(m.price)}
+--                         end
+--                         RageUI.ButtonWithStyle(
+--                             m.name,
+--                             "Press to spawn.",
+--                             n,
+--                             true,
+--                             function(o, p, q)
+--                                 if q then
+--                                     if not table.has(d["rented"], GetHashKey(l)) then
+--                                         tryRental(l, m.price)
+--                                     else
+--                                         trySpawnVehicle(l)
+--                                     end
+--                                 end
+--                             end
+--                         )
+--                     end
+--                 end
+--             end
+--         )
+--     end
+-- )
+-- RegisterNetEvent(
+--     "CORRUPT:updateOwnedTrucks",
+--     function(b, r)
+--         d["owned"] = b
+--         d["rented"] = r
+--     end
+-- )
+-- RegisterNetEvent(
+--     "CORRUPT:setTruckerOnDuty",
+--     function(s)
+--         globalOnTruckJob = s
+--     end
+-- )
+-- function tryRental(t, u)
+--     TriggerServerEvent("CORRUPT:rentTruck", t, u)
+-- end
+-- function getVehicleName(v)
+--     for l, m in pairs(b) do
+--         if GetHashKey(l) == v then
+--             return l
+--         end
+--     end
+--     return nil
+-- end
+-- Citizen.CreateThread(
+--     function()
+--         for w = 1, #a.buylocations do
+--             local x = a.buylocations[w]
+--             local y = x.main
+--             CORRUPT.add3DTextForCoord("Truck Rental", y.x, y.y, y.z, 8.0)
+--             tvRP.addMarker(y.x, y.y, y.z, 0.7, 0.7, 0.5, 0, 255, 125, 125, 50, 29, true, true)
+--             tvRP.addBlip(y.x, y.y, y.z, 67, 5, "Truck Rental")
+--         end
+--     end
+-- )
+-- AddEventHandler(
+--     "CORRUPT:onClientSpawn",
+--     function(z, A)
+--         if A then
+--             local B = function(C)
+--                 if not IsPedInAnyVehicle(ped, false) and GetVehiclePedIsIn(ped, false) ~= e then
+--                     i = true
+--                     RageUI.CloseAll()
+--                     RageUI.Visible(RMenu:Get("corrupttruckmenu", "buy-rent"), true)
+--                 end
+--             end
+--             local D = function()
+--                 i = false
+--                 RageUI.CloseAll()
+--             end
+--             local E = function()
+--             end
+--             for w = 1, #a.buylocations do
+--                 local x = a.buylocations[w]
+--                 local y = x.main
+--                 CORRUPT.createArea("trucking_buy_" .. w, x.main, 1.15, 6, B, D, E, {})
+--             end
+--         end
+--     end
+-- )
+-- function trySpawnVehicle(F)
+--     TriggerServerEvent("CORRUPT:spawnTruck", F)
+-- end
+-- RegisterNetEvent(
+--     "CORRUPT:spawnTruckCl",
+--     function(F)
+--         local ped = PlayerPedId()
+--         local y = GetEntityCoords(ped)
+--         local G = CORRUPT.spawnVehicle(F, y.x, y.y, y.z, GetEntityHeading(ped), true, true, true)
+--     end
+-- )
+-- function getAllTrucks()
+--     TriggerServerEvent("CORRUPT:truckerJobBuyAllTrucks")
+-- end

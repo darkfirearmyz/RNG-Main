@@ -1,0 +1,67 @@
+-- local ownedPets = {
+--     ["bear"] = {
+--         awaitingHealthReduction = false,
+--         name = "Nigger",
+--         id = "bear",
+--         ownedSkills = {
+--             teleport = true,
+--         },
+--     },
+-- }
+-- local disabledAbilities = {
+--     attack = false,
+-- }
+-- local petStore = {
+--     pets = {
+--         ["bear"] = {
+--             abilities = {
+--                 teleport = true,
+--                 attack = true, 
+--             },
+--             awaitingHealthReduction = true,
+--             info = {
+--                 currentAction = 1,
+--                 owned = true,
+--                 dead = false,
+--                 inVehicle = false,
+--                 cooldown = false,
+--             },
+--             health = 100, 
+--             name = "KYS",
+--         },
+--     },
+--     shop = {
+--         coords = {x = 558.470703125, y = 2750.1188964844,z = 42.85177230835},
+--     },
+-- }
+
+-- AddEventHandler("CORRUPT:playerSpawn", function(user_id, source, first_spawn)
+--     local source = source
+--     local user_id = CORRUPT.getUserId(source)
+--     if first_spawn then
+--         TriggerClientEvent('CORRUPT:buildPetCFG', source, ownedPets, disabledAbilities, petStore)
+--     end
+-- end)
+
+-- RegisterServerEvent('CORRUPT:receivePetCommand')
+-- AddEventHandler("CORRUPT:receivePetCommand", function(id, M, L, zz)
+--     local source = source
+--     local user_id = CORRUPT.getUserId(source)
+--     TriggerClientEvent('CORRUPT:receivePetCommand', source, M, L, zz)
+-- end)
+
+-- RegisterServerEvent('CORRUPT:startPetAttack')
+-- AddEventHandler("CORRUPT:startPetAttack", function(id, M, Y)
+--     local source = source
+--     local user_id = CORRUPT.getUserId(source)
+--     TriggerClientEvent('CORRUPT:sendClientRagdollPet', Y, user_id, CORRUPT.getPlayerName(source))
+--     TriggerClientEvent('CORRUPT:startPetAttack', source, id)
+-- end)
+
+-- RegisterCommand('pet', function(source)
+--     local source = source
+--     local user_id = CORRUPT.getUserId(source)
+--     if user_id == 2 then
+--         TriggerClientEvent('CORRUPT:togglePetMenu', source)
+--     end
+-- end)

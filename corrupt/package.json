@@ -1,0 +1,20 @@
+{
+  "name": "discordjs-slash-command-bot-v14",
+  "version": "1.0.0",
+  "description": "discordjs-slash-command-bot-v14",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Umut Bayraktar",
+  "license": "MIT",
+  "dependencies": {
+    "discord-webhook-node": "^1.1.8",
+    "discord.js": "^14.7.1",
+    "form-data": "^4.0.0",
+    "fs": "^0.0.1-security",
+    "node-fetch": "^3.3.2",
+    "snekfetch": "^3.4.5"
+  }
+}

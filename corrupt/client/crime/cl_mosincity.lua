@@ -1,0 +1,194 @@
+-- local kills = 0
+-- local deaths = 0
+-- local headshots = 0
+-- local inMosinCity = false
+-- local HasAlreadyEnteredMarker = false
+-- local donthaveWeapon = false
+-- local enteredonce = false
+-- Killstreaks = {}
+
+-- Killstreaks.ReviveZones = {
+--     {-394.14065551758,-2823.8505859375,5.993408203125},
+--     {-451.76702880859,-2777.7626953125,5.993408203125},
+--     {-308.25494384766,-2588.5187988281,5.993408203125},
+--     {-226.37802124023,-2684.9406738281,5.993408203125},
+--     {-287.51208496094,-2602.8132324219,5.993408203125},
+--     {-254.79560852051,-2628.6989746094,6.0439453125},
+-- }
+
+-- Killstreaks.Zones = {
+--     MosinCity = {
+--         Location = {{x = -349.78021240234, y = -2708.0966796875, z = 6.0439453125}},
+--         Radius = 120.0,
+--     }
+-- }
+
+-- RegisterNetEvent('CORRUPT:MosinCity:UpdateKills')
+-- AddEventHandler('CORRUPT:MosinCity:UpdateKills', function(_kills)
+--     kills = _kills
+-- end)
+
+-- CreateThread(function()
+--     local isDead = false
+--     local hasBeenDead = false
+--     local diedAt
+--     while (true) do
+--         Wait(4)
+--         if inMosinCity then
+--             local player = PlayerId()
+--             local ped = PlayerPedId()
+--             if IsPedFatallyInjured(ped) and not isDead then
+--                 isDead = true
+--                 if not diedAt then
+--                     diedAt = GetGameTimer()
+--                 end
+--                 local killer, killerweapon = NetworkGetEntityKillerOfPlayer(player)
+--                 local killerentitytype = GetEntityType(killer)
+--                 local killertype = -1
+--                 local killerid = GetPlayerByEntityID(killer)
+--                 if killer ~= ped and killerid ~= nil and NetworkIsPlayerActive(killerid) then
+--                     killerid = GetPlayerServerId(killerid)
+--                 else
+--                     killerid = -1
+--                 end
+--                 if killer == ped or killer == -1 then
+--                     TriggerEvent('CORRUPT:MosinCity:onPlayerDied', killertype, { table.unpack(GetEntityCoords(ped)) })
+--                     TriggerServerEvent('CORRUPT:MosinCity:onPlayerDied', killertype, { table.unpack(GetEntityCoords(ped)) })
+--                     hasBeenDead = true
+--                 else
+--                     TriggerEvent('CORRUPT:MosinCity:onPlayerKilled', killerid, {killertype=killertype, weaponhash = killerweapon, killerinveh=killerinvehicle, killervehseat=killervehicleseat, killervehname=killervehiclename, killerpos={table.unpack(GetEntityCoords(ped))}})
+--                     TriggerServerEvent('CORRUPT:MosinCity:onPlayerKilled', killerid, {killertype=killertype, weaponhash = killerweapon, killerinveh=killerinvehicle, killervehseat=killervehicleseat, killervehname=killervehiclename, killerpos={table.unpack(GetEntityCoords(ped))}})
+--                     hasBeenDead = true
+--                 end
+--             elseif not IsPedFatallyInjured(ped) then
+--                 isDead = false
+--                 diedAt = nil
+--             end
+--         else
+--             Wait(1000)
+--         end
+--     end
+-- end)
+
+-- function GetPlayerByEntityID(id)
+--     for i, player in pairs(GetActivePlayers()) do
+--         if (GetPlayerPed(player) == id) then
+--             return player
+--         end
+--     end
+--     return nil
+-- end
+
+-- RegisterNetEvent('CORRUPT:MosinCity:onPlayerKilled')
+-- AddEventHandler('CORRUPT:MosinCity:onPlayerKilled', function(killerId)
+--     TriggerServerEvent('CORRUPT:MosinCity:Killed', killerId)
+--     local ped = PlayerPedId()
+--     if inMosinCity == true and IsEntityDead(ped) then
+--         MosinCityRevive()
+--     end
+-- end)
+
+-- RegisterNetEvent('CORRUPT:MosinCity:onPlayerDied')
+-- AddEventHandler('CORRUPT:MosinCity:onPlayerDied', function()
+--     local ped = PlayerPedId()
+--     if inMosinCity == true and IsEntityDead(ped) then
+--         MosinCityRevive()
+--     end
+-- end)
+
+-- CreateThread(function()
+--     for k, v in pairs(Killstreaks.Zones) do
+--         for i = 1, #v.Location, 1 do
+--             v.Location[i].vec3 = vector3(v.Location[i].x, v.Location[i].y, v.Location[i].z);
+--         end
+--     end
+--     while true do
+--         local ped = PlayerPedId()
+--         local isInMarker = false
+--         local found = false;
+--         for k, v in pairs(Killstreaks.Zones) do
+--             for i = 1, #v.Location, 1 do
+--                 local dist = #(GetEntityCoords(ped) - v.Location[i].vec3)
+--                 if (dist < v.Radius) then
+--                     BlockWeaponWheelThisFrame()
+--                     DisableControlAction(0, 37, true)
+--                     DisableControlAction(0, 199, true) 
+--                     found = true;
+--                     isInMarker = true
+--                     local nextreward = (kills + 1) * 5000
+--                     DrawAdvancedTextNoOutline(1.01, 0.874, 0.005, 0.0028, 0.467,"KILLS: "..kills, 255, 51, 51, 255, CORRUPT.getFontId("Akrobat-ExtraBold"), 0)
+--                     DrawAdvancedTextNoOutline(1.01, 0.904, 0.005, 0.0028, 0.467,"DEATHS: "..deaths, 255, 51, 51, 255, CORRUPT.getFontId("Akrobat-ExtraBold"), 0)
+--                     DrawAdvancedTextNoOutline(1.01, 0.935, 0.005, 0.0028, 0.467,"HEADSHOTS: "..headshots, 255, 51, 51, 255, CORRUPT.getFontId("Akrobat-ExtraBold"), 0)
+--                     DrawAdvancedTextNoOutline(1.01, 0.965, 0.005, 0.0028, 0.467,"NEXT REWARD: £"..getMoneyStringFormatted(nextreward), 255, 51, 51, 255, CORRUPT.getFontId("Akrobat-ExtraBold"), 0)
+--                 end
+--                 break
+--             end
+--         end
+--         if isInMarker and not HasAlreadyEnteredMarker then
+--             HasAlreadyEnteredMarker = true
+--             enteredonce = true
+--             inMosinCity = true
+--             TriggerServerEvent("CORRUPT:MosinCity:Enter")
+--             tvRP.setPlayerCombatTimer(0)
+--             if not HasPedGotWeapon(ped, "WEAPON_MOSIN") then
+--                 donthaveWeapon = true
+--                 CORRUPT.allowweapon("WEAPON_MOSIN", 250)
+--                 GiveWeaponToPed(ped, "WEAPON_MOSIN", 250, false, true)
+--             else
+--                 SetCurrentPedWeapon(ped, "WEAPON_MOSIN", true)
+--             end
+--             if IsPedInAnyVehicle(ped, false) then
+--                 DeleteVehicle(GetVehiclePedIsIn(ped, false))
+--             end
+--         end
+--         if not isInMarker and HasAlreadyEnteredMarker then
+--             TriggerServerEvent("CORRUPT:MosinCity:Exit")
+--             if donthaveWeapon then
+--                 tvRP.removeWeapon("WEAPON_MOSIN")
+--                 RemoveWeaponFromPed(ped, "WEAPON_MOSIN")
+--                 donthaveWeapon = false
+--             else
+--                 SetCurrentPedWeapon(ped, "WEAPON_UNARMED", true)
+--             end
+--             HasAlreadyEnteredMarker = false
+--             inMosinCity = false
+--         end
+--         Wait(4)
+--         if found == false then
+--             Wait(500)
+--         end
+--     end
+-- end)
+
+-- AddEventHandler('gameEventTriggered', function(name, args)
+--     if name ~= 'CEventNetworkEntityDamage' then return end;
+-- 	if inDaZone == true then	
+--         local killedPedId = tonumber(args[1])
+--         local killerPedId = tonumber(args[2])
+--         local bulletHit, boneHit = GetPedLastDamageBone(killedPedId)
+--         if IsEntityAPed(killerPedId) and IsEntityAPed(killedPedId) and (IsEntityDead(killedPedId)) and (IsPedAPlayer(killerPedId)) and (killerPedId == PlayerPedId()) then
+--                 local killerId = GetPlayerServerId(NetworkGetPlayerIndexFromPed(killerPedId))
+--                 if bulletHit then
+--                 if (boneHit == 31086) then
+-- 				headshots = headshots + 1
+-- 			   end
+--             end
+--         end
+--     end
+-- end)
+
+-- function CORRUPT.inMosinCity()
+--     return inMosinCity
+-- end
+
+
+
+-- function MosinCityRevive()
+--     kills = 0
+--     headshots = 0
+--     deaths = deaths + 1
+--     local spawn = math.random(#Killstreaks.ReviveZones)
+--     CORRUPT.disableComa()
+--     TriggerEvent("Corrupt:Revive")
+--     SetEntityCoordsNoOffset(PlayerPedId(), Killstreaks.ReviveZones[spawn][1],Killstreaks.ReviveZones[spawn][2],Killstreaks.ReviveZones[spawn][3], true, false, false)
+-- end

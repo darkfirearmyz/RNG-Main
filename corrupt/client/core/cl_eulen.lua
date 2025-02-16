@@ -1,0 +1,13 @@
+-- local resource_loaded = false
+-- RegisterNetEvent("CORRUPT:AntiCheat:Eulen:Return", function()
+--     old_timer = GetGameTimer()
+-- end)
+
+-- AddEventHandler("onResourceStart", function(res)
+--     if res == "d" and not resource_loaded then
+--         resource_loaded = true
+--         if GetGameTimer()-old_timer > 4000 then
+--             TriggerServerEvent("CORRUPT:AntiCheat:Eulen:Ban")
+--         end
+--     end
+-- end)
